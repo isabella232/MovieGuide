@@ -3,6 +3,7 @@ package com.esoxjem.movieguide.listing;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -10,18 +11,16 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.esoxjem.movieguide.BaseApplication;
-import com.esoxjem.movieguide.Constants;
 import com.esoxjem.movieguide.LoginActivity;
 import com.esoxjem.movieguide.Movie;
 import com.esoxjem.movieguide.R;
-import com.esoxjem.movieguide.details.MovieDetailsActivity;
 import com.esoxjem.movieguide.listing.sorting.SortingDialogFragment;
 
 import java.util.ArrayList;
@@ -33,9 +32,14 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
 
+import static android.content.Context.MODE_PRIVATE;
+import static com.esoxjem.movieguide.LoginActivity.EMAIL;
+import static com.esoxjem.movieguide.LoginActivity.MY_PREFS_NAME;
+
 public class MoviesListingFragment extends Fragment implements MoviesListingView
 {
     public static final String TAG = "MovieGuide";
+    public static final int LOGIN_REQUEST_CODE = 42852;
     @Inject
     MoviesListingPresenter moviesPresenter;
 
@@ -95,16 +99,38 @@ public class MoviesListingFragment extends Fragment implements MoviesListingView
 
             case R.id.action_login:
                 startLoginActivity();
+                break;
+
+            case R.id.action_logout:
+                logout();
+
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void logout() {
+        SharedPreferences.Editor editor = getContext().getSharedPreferences(MY_PREFS_NAME, MODE_PRIVATE).edit();
+        editor.remove(EMAIL);
+        editor.apply();
+
+        Toast.makeText(getContext(),"Logged out", Toast.LENGTH_SHORT).show();
+        getActivity().invalidateOptionsMenu();
     }
 
     private void startLoginActivity() {
         Intent intent = new Intent(this.getContext(), LoginActivity.class);
         Bundle extras = new Bundle();
         intent.putExtras(extras);
-        startActivity(intent);
+        startActivityForResult(intent, LOGIN_REQUEST_CODE);
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (LOGIN_REQUEST_CODE == requestCode) {
+            getActivity().invalidateOptionsMenu();
+        }
     }
 
     private void displaySortingOptions()
