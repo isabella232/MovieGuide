@@ -3,8 +3,10 @@
     <color name="colorPrimary">#333333</color>
     <color name="colorPrimaryDark">#1e1e1e</color>
     <color name="colorAccent">#ffc701</color>
+    <color name="textfieldTextColor">#ffffff</color>
 
     <color name="black_translucent_60">#99000000</color>
 
     <color name="window_background">#282828</color>
+    <color name="textfieldHintColor">#FFFFFF7F</color>
 </resources>

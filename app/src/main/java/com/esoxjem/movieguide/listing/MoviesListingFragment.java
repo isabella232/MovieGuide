@@ -2,6 +2,7 @@ package com.esoxjem.movieguide.listing;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -9,14 +10,18 @@ import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.esoxjem.movieguide.BaseApplication;
+import com.esoxjem.movieguide.Constants;
+import com.esoxjem.movieguide.LoginActivity;
 import com.esoxjem.movieguide.Movie;
 import com.esoxjem.movieguide.R;
+import com.esoxjem.movieguide.details.MovieDetailsActivity;
 import com.esoxjem.movieguide.listing.sorting.SortingDialogFragment;
 
 import java.util.ArrayList;
@@ -30,6 +35,7 @@ import butterknife.Unbinder;
 
 public class MoviesListingFragment extends Fragment implements MoviesListingView
 {
+    public static final String TAG = "MovieGuide";
     @Inject
     MoviesListingPresenter moviesPresenter;
 
@@ -85,9 +91,20 @@ public class MoviesListingFragment extends Fragment implements MoviesListingView
         {
             case R.id.action_sort:
                 displaySortingOptions();
+                break;
+
+            case R.id.action_login:
+                startLoginActivity();
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void startLoginActivity() {
+        Intent intent = new Intent(this.getContext(), LoginActivity.class);
+        Bundle extras = new Bundle();
+        intent.putExtras(extras);
+        startActivity(intent);
     }
 
     private void displaySortingOptions()
